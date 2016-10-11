@@ -4,3 +4,6 @@ version = "0.1.0"
 authors = ["Andrew Radev <andrey.radev@gmail.com>"]
 
 [dependencies]
+linenoise-rust = "0.2"
+regex = "*"
+rand = "0.3"
