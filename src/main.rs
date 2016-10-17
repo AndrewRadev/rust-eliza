@@ -27,6 +27,13 @@ fn main() {
 
 fn build_response(input: String) -> String {
     let mut rng = rand::thread_rng();
+    let normalized_input = normalize_input(&input);
+
+    debug("normalized input", &normalized_input);
+
+    if normalized_input.ends_with("?") {
+        return "I'd like to be the one to ask the questions. Tell me more about yourself, instead.".to_string();
+    }
 
     let prefix_choices =
         [
@@ -47,24 +54,60 @@ fn build_response(input: String) -> String {
         ];
     let suffix = rng.choose(&suffix_choices).unwrap();
 
-    return format!("{} {}? {}", prefix, reverse_input(input), suffix);
+    let reversed_input = reverse_pronouns(normalized_input);
+    debug("reversed input", &reversed_input);
+
+    // post-processing
+    let reversed_input = replace_phrases(&reversed_input, r"it's true that|do|well|you guess|you suppose|kinda|sorta|thank you|please|yes|no", &[""]);
+
+    let reversed_input = Regex::new(r"\s+([,;-])").unwrap().replace_all(&reversed_input, "$1");
+    let reversed_input = Regex::new(r"([,;-])+"  ).unwrap().replace_all(&reversed_input, "$1");
+    let reversed_input = Regex::new(r"[,;-]+\s*$").unwrap().replace_all(&reversed_input, "");
+    let reversed_input = Regex::new(r"\s\s+$"    ).unwrap().replace_all(&reversed_input, " ");
+    let reversed_input = reversed_input.trim().to_string();
+
+    debug("cleaned reversed input", &reversed_input);
+
+    return format!("{} {}? {}", prefix, reversed_input, suffix);
 }
 
-fn reverse_input(input: String) -> String {
-    // Normalize input:
-    let response = input.to_lowercase();
-    let response = Regex::new(r"\s+").unwrap().replace_all(&response, " ");
-
-    let mut rng = rand::thread_rng();
-
-    let &replacement = rng.choose(&["you are", "you're"]).unwrap();
-    let response = Regex::new(r"\b(i'm|i am)\b").unwrap().replace_all(&response, replacement);
-
-    let &replacement = rng.choose(&["you would", "you'd"]).unwrap();
-    let response = Regex::new(r"\b(i'd|i would)\b").unwrap().replace_all(&response, replacement);
-
-    let response = Regex::new(r"\bi\b").unwrap().replace_all(&response, "you");
-    let response = Regex::new(r"\bme\b").unwrap().replace_all(&response, "you");
+fn reverse_pronouns(input: String) -> String {
+    let response = input;
+    let response = replace_phrases(&response, r"i'm|i am",    &["you are",   "you're"]);
+    let response = replace_phrases(&response, r"i'd|i would", &["you would", "you'd"]);
+    let response = replace_phrases(&response, r"i|me",        &["you"]);
+    let response = replace_phrases(&response, r"my",          &["your"]);
+    let response = replace_phrases(&response, r"mine",        &["yours"]);
 
     return response;
+}
+
+fn replace_phrases(input: &str, pattern: &str, replacement: &[&str]) -> String {
+    let mut rng      = rand::thread_rng();
+    let &replacement = rng.choose(replacement).unwrap();
+    let full_pattern = format!(r"\b({})\b", pattern);
+    let response     = Regex::new(&full_pattern).unwrap().replace_all(&input, replacement);
+
+    return response;
+}
+
+fn normalize_input(input: &str) -> String {
+    let normalized_input = input;
+    let normalized_input = normalized_input.to_lowercase().trim().to_string();
+
+    let normalized_input = Regex::new(r"\s+"   ).unwrap().replace_all(&normalized_input, " ");
+    let normalized_input = Regex::new(r"[.?!]" ).unwrap().replace_all(&normalized_input, "");
+    let normalized_input = Regex::new(r"\s\s+$").unwrap().replace_all(&normalized_input, " ");
+
+    return normalized_input;
+}
+
+#[cfg(debug_assertions)]
+fn debug(label: &str, subject: &str) {
+    println!("DEBUG ({}), {:?}", label, subject);
+}
+
+#[cfg(not(debug_assertions))]
+fn debug(label: &str, subject: &str) {
+    // do nothing;
 }
