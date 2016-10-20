@@ -5,8 +5,6 @@ extern crate rand;
 use regex::Regex;
 use rand::Rng;
 
-// TODO: Filler words/phrases in input: "I guess", "I suppose", "maybe", "well,", "to be honest"
-
 fn main() {
     println!("Hello, I'm Eliza, your psychiatrist. How are you feeling today?");
 
@@ -32,6 +30,7 @@ fn build_response(input: String) -> String {
     debug("normalized input", &normalized_input);
 
     if normalized_input.ends_with("?") {
+        // TODO multiple randomized responses to this
         return "I'd like to be the one to ask the questions. Tell me more about yourself, instead.".to_string();
     }
 
@@ -60,6 +59,7 @@ fn build_response(input: String) -> String {
     // post-processing
     let reversed_input = replace_phrases(&reversed_input, r"it's true that|do|well|you guess|you suppose|kinda|sorta|thank you|please|yes|no", &[""]);
 
+    // clean punctuation
     let reversed_input = Regex::new(r"\s+([,;-])").unwrap().replace_all(&reversed_input, "$1");
     let reversed_input = Regex::new(r"([,;-])+"  ).unwrap().replace_all(&reversed_input, "$1");
     let reversed_input = Regex::new(r"[,;-]+\s*$").unwrap().replace_all(&reversed_input, "");
@@ -70,6 +70,8 @@ fn build_response(input: String) -> String {
 
     return format!("{} {}? {}", prefix, reversed_input, suffix);
 }
+
+// Utility functions
 
 fn reverse_pronouns(input: String) -> String {
     let response = input;
@@ -101,6 +103,8 @@ fn normalize_input(input: &str) -> String {
 
     return normalized_input;
 }
+
+// Debugging messages only in Debug target, not Release
 
 #[cfg(debug_assertions)]
 fn debug(label: &str, subject: &str) {
