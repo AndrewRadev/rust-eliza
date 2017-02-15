@@ -27,6 +27,3 @@ work in progress, but it's also not intended to ever be a particularly impressiv
 - Memory of previous lines, somehow. If the user's mother has already been discussed, maybe this
   could be referenced.
 - More padding words. Maybe a file with a list? Use [build.rs](http://doc.crates.io/build-script.html#case-study-code-generation) to include JSON with the contents
-- More formats of responses -- repeating the user's input over and over gets tedious, maybe
-  sometimes, it makes sense to just say "Go on", or "Tell me more", especially for longer user
-  inputs.
