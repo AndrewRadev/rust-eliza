@@ -5,5 +5,5 @@ authors = ["Andrew Radev <andrey.radev@gmail.com>"]
 
 [dependencies]
 linenoise-rust = "0.2"
-regex = "*"
+regex = "0.2.1"
 rand = "0.3"
