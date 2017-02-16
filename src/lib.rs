@@ -81,7 +81,7 @@ fn reverse_pronouns(input: String) -> String {
     let response = replace_phrases(&response, &[r"my"],              &["your"]);
     let response = replace_phrases(&response, &[r"mine"],            &["yours"]);
 
-    return response;
+    return response.to_string();
 }
 
 fn replace_phrases(input: &str, patterns: &[&str], replacement: &[&str]) -> String {
@@ -90,7 +90,7 @@ fn replace_phrases(input: &str, patterns: &[&str], replacement: &[&str]) -> Stri
     let full_pattern = format!(r"\b({})\b", patterns.join("|"));
     let response     = Regex::new(&full_pattern).unwrap().replace_all(&input, replacement);
 
-    return response;
+    return response.to_string();
 }
 
 fn normalize_input(input: &str) -> String {
@@ -109,7 +109,7 @@ fn normalize_input(input: &str) -> String {
     let normalized_input = Regex::new(r"[.!]"  ).unwrap().replace_all(&normalized_input, "");
     let normalized_input = Regex::new(r"\s\s+$").unwrap().replace_all(&normalized_input, " ");
 
-    return normalized_input;
+    return normalized_input.to_string();
 }
 
 // Debugging messages only in Debug target, not Release
