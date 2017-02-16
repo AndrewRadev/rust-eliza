@@ -94,16 +94,19 @@ fn replace_phrases(input: &str, patterns: &[&str], replacement: &[&str]) -> Stri
 }
 
 fn normalize_input(input: &str) -> String {
+    let mut rng = rand::thread_rng();
 
     // First, split into sentences, to pick just one to respond to
-    // TODO not quite working yet
-    //let mut rng = rand::thread_rng();
-    //let sentence_regex = Regex::new(r"\s*[.?!]\s*").unwrap();
-    //let sentences: Vec<&str> = sentence_regex.split(input.trim()).collect();
-    //let target_sentence = rng.choose(&sentences).unwrap();
+    let sentence_regex = Regex::new(r".*?([.?!]|$)").unwrap();
+    let sentences: Vec<&str> = sentence_regex.
+        find_iter(input).
+        map( |m| m.as_str() ).
+        collect();
+    debug("sentences", &sentences);
+    let target_sentence = rng.choose(&sentences).unwrap();
 
-    let normalized_input = input;
-    let normalized_input = normalized_input.to_lowercase().to_string();
+    let normalized_input = target_sentence;
+    let normalized_input = normalized_input.to_lowercase().trim().to_string();
 
     let normalized_input = Regex::new(r"\s+"   ).unwrap().replace_all(&normalized_input, " ");
     let normalized_input = Regex::new(r"[.!]"  ).unwrap().replace_all(&normalized_input, "");
@@ -115,11 +118,13 @@ fn normalize_input(input: &str) -> String {
 // Debugging messages only in Debug target, not Release
 
 #[cfg(debug_assertions)]
-fn debug(label: &str, subject: &str) {
+fn debug<T>(label: &str, subject: T)
+    where T: std::fmt::Debug {
     println!("DEBUG ({}), {:?}", label, subject);
 }
 
 #[cfg(not(debug_assertions))]
-fn debug(label: &str, subject: &str) {
+fn debug<T>(label: &str, subject: T)
+    where T: std::fmt::Debug {
     // do nothing;
 }
