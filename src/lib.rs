@@ -51,7 +51,6 @@ pub fn get_response_to(input: String) -> String {
     // post-processing
     let filler_phrases = [
         r"it's true that",
-        r"do", r"well",
         r"you guess", r"you suppose",
         r"kinda", r"sorta",
         r"thank you", r"please", r"yes", r"no"
