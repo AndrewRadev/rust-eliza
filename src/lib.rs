@@ -123,6 +123,7 @@ fn debug<T>(label: &str, subject: T)
 }
 
 #[cfg(not(debug_assertions))]
+#[allow(unused_variables)]
 fn debug<T>(label: &str, subject: T)
     where T: std::fmt::Debug {
     // do nothing;
