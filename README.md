@@ -8,15 +8,21 @@ prompt. A sample session might look like this:
 ```
 Hello, I'm Eliza, your psychiatrist. How are you feeling today?
 > I'm feeling fine.
-Does it bother you that you are feeling fine? Tell me more.
-> Well, maybe I feel kinda guilty for feeling fine.
-How do you feel about the fact that , maybe you feel  guilty for feeling fine? Tell me more.
-> Have I really deserved to feel fine?
-How do you feel about the fact that have you really deserved to feel fine?
+Interesting, you say that you are feeling fine?
+> I do, I'm very optimistic today.
+Are you sure that you do, you're very optimistic today?
+> Well, now that you're asking, I'm starting to doubt it.
+Elaborate, please.
+> I think I could have been more productive at work.
+Are you sure you think you could have been more productive at work?
+> Maybe. It's difficult to tell.
+Tell me more.
+> It's like, how can you really tell?
+I'd like to be the one to ask the questions. Tell me more about yourself, instead.
 >
 ```
 
-As you can see, there's problems with formatting, and sometimes the responses are clumsy. It's a
+As you can see, the responses can be quite clumsy, but it's pretty fun when they work out. It's a
 work in progress, but it's also not intended to ever be a particularly impressive project.
 
 ## Extension ideas
